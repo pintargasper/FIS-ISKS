@@ -128,25 +128,20 @@ const Photoresistor: () => JSX.Element = (): JSX.Element => {
 
                     <button
                         className={"btn btn-primary btn-sm float-end"}
-                        onClick={handleButtonClick}
-                    >
+                        onClick={handleButtonClick}>
                         {state.isLedEnabled ? "Turn off" : "Turn on"}
                     </button>
                 </div>
 
                 <div className={"card-body"}>
                     <div>
-                        <TChart
-                            ref={chartReference}
-                            label={"Photoresistor"}
-                        />
+                        <TChart ref={chartReference} label={"Photoresistor"}/>
                     </div>
 
                     <div className={"d-flex align-items-center mb-3"}>
                         <label
                             htmlFor={"threshold"}
-                            className={"form-label me-2 mb-0"}
-                        >
+                            className={"form-label me-2 mb-0"}>
                             Threshold
                         </label>
 

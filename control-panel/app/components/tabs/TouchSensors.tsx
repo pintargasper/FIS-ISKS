@@ -39,16 +39,14 @@ const TouchSensors: () => JSX.Element = (): JSX.Element => {
                         <button
                             id={"toggleChartsButton"}
                             className={"btn btn-primary btn-sm"}
-                            onClick={handleAddChart}
-                        >
+                            onClick={handleAddChart}>
                             Add chart
                         </button>
 
                         <button
                             id={"removeChartButton"}
                             className={"btn btn-danger btn-sm"}
-                            onClick={handleRemoveChart}
-                        >
+                            onClick={handleRemoveChart}>
                             Remove chart
                         </button>
                     </div>
@@ -60,11 +58,9 @@ const TouchSensors: () => JSX.Element = (): JSX.Element => {
                             <div className={"col-md-4"} key={index}>
                                 <div className={"border rounded p-3 text-center"}>
                                     <h6>LED {index + 1}</h6>
-
                                     <span
                                         id={`ledStatus${index + 1}`}
-                                        className={ledStatuses[index] ? "badge text-bg-success" : "badge text-bg-secondary"}
-                                    >
+                                        className={ledStatuses[index] ? "badge text-bg-success" : "badge text-bg-secondary"}>
                                         {ledStatuses[index] ? "On" : "Off"}
                                     </span>
                                 </div>
@@ -78,7 +74,6 @@ const TouchSensors: () => JSX.Element = (): JSX.Element => {
                                 visibleCharts[index] ? (
                                     <div key={index} className={"mb-4"}>
                                         <h6>Touch pin {index + 1}</h6>
-
                                         <div>
                                             <TChart label={`Touch ${index + 1}`} />
                                         </div>
