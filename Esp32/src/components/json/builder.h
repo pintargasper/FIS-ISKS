@@ -6,5 +6,5 @@
 class Builder {
 
     public:
-        static String createMessage(const char* name, int value, bool status = true, String error = "", String source = "ESP32");
+        static String createMessage(const char* name, int value, bool status, String error, String source);
 };

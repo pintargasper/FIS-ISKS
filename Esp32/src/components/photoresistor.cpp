@@ -2,14 +2,14 @@
 #include "network/manager.h"
 #include "json/builder.h"
 
-void Photoresistor::begin() {
+void Photoresistor::setup() {
     pinMode(photoresistorPin, INPUT);
     pinMode(mainLedPin, OUTPUT);
     pinMode(backupLedPin, OUTPUT);
     pinMode(espLedPin, OUTPUT);
 }
 
-void Photoresistor::update(WebSocketsClient& webSocket) {
+void Photoresistor::loop(WebSocketsClient& webSocket) {
 
     int value = analogRead(photoresistorPin);
 

@@ -7,8 +7,8 @@
 class Photoresistor {
 
     public:
-        void begin();
-        void update(WebSocketsClient& webSocket);
+        void setup();
+        void loop(WebSocketsClient& webSocket);
         void handleServerCommand(const JsonDocument &jsonDocument);
 
     private:
@@ -27,4 +27,19 @@ class Photoresistor {
 
         void blinkEspLed(int pin, bool &mainState, bool &state, unsigned long &lastBlinkTime, unsigned long interval);
         String evaluateControlState(bool lowLight);
+};
+
+class Potentiometer {
+
+    public:
+        void setup();
+        void loop(WebSocketsClient& webSocket);
+        void handleServerCommand(const JsonDocument &jsonDocument);
+    private:
+        int potentiometerPin = 32;
+        int blueLedPin = 27;
+        int greenLedPin = 26;
+        int redLedPin = 25;
+
+        void setLedState(bool blue, bool green, bool red);
 };

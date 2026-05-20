@@ -8,6 +8,7 @@ String Builder::createMessage(const char* name, int value, bool status, String e
     jsonDocument["status"] = status;
     jsonDocument["error"] = error;
     jsonDocument["source"] = source;
+    jsonDocument["timestamp"] = millis();
 
     String output;
     serializeJson(jsonDocument, output);
