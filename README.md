@@ -13,11 +13,9 @@
 
 ## Table of Contents
 
-1. [Task 1: Photoresistor](#task-1-photoresistor)
-2. [Task 2: Touch Sensors](#task-2-touch-sensors)
-3. [Task 3: Potentiometer](#task-3-potentiometer)
-
----
+- [Task 1: Photoresistor](#task-1-photoresistor)
+- [Task 2: Touch Sensors](#task-2-touch-sensors)
+- [Task 3: Potentiometer](#task-3-potentiometer)
 
 ## Task 1: Photoresistor
 
@@ -31,17 +29,13 @@
   <img src="assets/task1.png" width="600px" alt="Photoresistor Example">
 </div>
 
----
-
 ## Task 2: Touch Sensors
 
 **Pins used**
 - Touch Sensor 1: 
 - Touch Sensor 2: 
 - Touch Sensor 3: 
-- Each touch sensor controls a corresponding LED (see code for mapping)
-
----
+- Each touch sensor controls a corresponding LED
 
 ## Task 3: Potentiometer
 
@@ -55,15 +49,11 @@
   <img src="assets/task3.png" width="600px" alt="Potentiometer Example">
 </div>
 
----
-
 ## System Architecture
 
 The system consists of
 - **ESP32**: Reads sensors and controls actuators, communicates with the dashboard via WebSocket (SSL)
 - **Web Control Panel (Next.js)**: Visualizes sensor data and allows control of actuators in real time
-
----
 
 ## Communication
 
@@ -91,8 +81,6 @@ Messages are exchanged in JSON format over WebSocket
 }
 ```
 
----
-
 ## Examples
 
 ### Photoresistor
@@ -101,11 +89,9 @@ Messages are exchanged in JSON format over WebSocket
 - Set threshold for low light detection
 
 ### Touch Sensors
-- Add/remove charts for each touch pin.
-- Show LED status for each touch input.
+- Add/remove charts for each touch pin
+- Show LED status for each touch input
 
 ### Potentiometer
-- Displays analog value and status (Too low, OK, Too high).
-- Status LEDs indicate the range.
-
----
+- Displays analog value and status (Too low, OK, Too high)
+- Status LEDs indicate the range
