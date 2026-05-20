@@ -5,88 +5,24 @@ import React, {
     JSX,
     RefObject,
     useEffect,
-    useReducer,
     useRef
 } from "react";
 
-import { useWebSocket } from "@/server/context/WsContext";
-import TChart, {TChartHandle} from "@/app/components/TChart";
-
-type PhotoresistorAction =
-    | { type: "SET_LED"; value: boolean }
-    | { type: "SET_ERROR"; value: string | null };
-
-interface ServerMessage {
-    name: string;
-    value?: number;
-    status?: boolean;
-    error?: string;
-}
-
-interface PhotoresistorState {
-    isLedEnabled: boolean;
-    error: string | null;
-}
-
-const photoresistorReducer: (
-    state: PhotoresistorState,
-    action: PhotoresistorAction
-) => PhotoresistorState = (
-    state: PhotoresistorState,
-    action: PhotoresistorAction
-): PhotoresistorState => {
-    switch (action.type) {
-        case "SET_LED":
-            return {
-                ...state,
-                isLedEnabled: action.value,
-            };
-        case "SET_ERROR":
-            return {
-                ...state,
-                error: action.value,
-            };
-        default:
-            return state;
-    }
-};
+import TChart, { TChartHandle } from "@/app/components/TChart";
+import useMessage from "@/hooks/useMessage";
 
 const Photoresistor: () => JSX.Element = (): JSX.Element => {
 
     const chartReference: RefObject<TChartHandle | null> = useRef<TChartHandle | null>(null);
-    const { sendMessage, lastMessage } = useWebSocket();
-    const [state, dispatch] = useReducer(photoresistorReducer, {isLedEnabled: false, error: null});
     const lastSendTimeReference: RefObject<number> = useRef<number>(0);
 
+    const { data, sendMessage } = useMessage("photoresistor");
+
+    const isLedEnabled: boolean = data?.status ?? false;
+
     useEffect((): void => {
-        if (!lastMessage) {
-            return;
-        }
-
-        const data: ServerMessage = JSON.parse(lastMessage);
-
-        if (!data?.name) {
-            return;
-        }
-
-        if (data.name === "photoresistor") {
-            if (typeof data.value === "number") {
-                chartReference.current?.addValue(data.value);
-            }
-
-            if (typeof data.status === "boolean") {
-                dispatch({
-                    type: "SET_LED",
-                    value: data.status,
-                });
-            }
-
-            dispatch({
-                type: "SET_ERROR",
-                value: data.error ?? null,
-            });
-        }
-    }, [lastMessage]);
+        chartReference.current?.addValue(data?.value);
+    }, [data?.timestamp, data?.value]);
 
     const handleButtonClick: () => void = (): void => {
 
@@ -95,30 +31,31 @@ const Photoresistor: () => JSX.Element = (): JSX.Element => {
         }
 
         lastSendTimeReference.current = Date.now();
+
         sendMessage(
             JSON.stringify({
                 name: "mainButton",
-                value: !state.isLedEnabled,
+                value: !isLedEnabled,
             })
         );
     };
 
-    const handleThresholdChange: (event: ChangeEvent<HTMLInputElement>) =>
-        void = (event: ChangeEvent<HTMLInputElement>): void => {
+    const handleThresholdChange: (event: ChangeEvent<HTMLInputElement>) => void =
+        (event: ChangeEvent<HTMLInputElement>): void => {
 
-        const thresholdValue: number = parseFloat(event.target.value);
+            const thresholdValue: number = parseFloat(event.target.value);
 
-        if (isNaN(thresholdValue)) {
-            return;
-        }
+            if (isNaN(thresholdValue)) {
+                return;
+            }
 
-        sendMessage(
-            JSON.stringify({
-                name: "threshold",
-                value: thresholdValue,
-            })
-        );
-    };
+            sendMessage(
+                JSON.stringify({
+                    name: "threshold",
+                    value: thresholdValue,
+                })
+            );
+        };
 
     return (
         <section className={"tab-content-section"}>
@@ -129,13 +66,13 @@ const Photoresistor: () => JSX.Element = (): JSX.Element => {
                     <button
                         className={"btn btn-primary btn-sm float-end"}
                         onClick={handleButtonClick}>
-                        {state.isLedEnabled ? "Turn off" : "Turn on"}
+                        {isLedEnabled ? "Turn off" : "Turn on"}
                     </button>
                 </div>
 
                 <div className={"card-body"}>
                     <div>
-                        <TChart ref={chartReference} label={"Photoresistor"}/>
+                        <TChart ref={chartReference} label={"Photoresistor"} />
                     </div>
 
                     <div className={"d-flex align-items-center mb-3"}>
@@ -157,7 +94,7 @@ const Photoresistor: () => JSX.Element = (): JSX.Element => {
                     <p className={"mb-0"}>
                         Notice:{" "}
                         <span>
-                            {state.error ? state.error : "No errors"}
+                            {data?.error ? data.error : "No errors"}
                         </span>
                     </p>
                 </div>

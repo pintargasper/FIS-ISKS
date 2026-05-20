@@ -27,6 +27,7 @@ interface WsMessage {
     status?: WsPrimitive;
     error?: string;
     source?: string;
+    timestamp?: number;
 }
 
 process.on("unhandledRejection", (reason: unknown): void => {

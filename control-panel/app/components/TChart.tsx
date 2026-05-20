@@ -16,7 +16,9 @@ import {
     LinearScale,
     CategoryScale,
     ChartData,
-    ChartOptions
+    ChartOptions,
+    Point,
+    ChartDataset
 } from "chart.js";
 
 Chart.register(
@@ -29,12 +31,20 @@ Chart.register(
 
 interface TChartProps {
     label: string;
+    lineColor?: string;
 }
 
-export interface TChartHandle {
-    addValue: (sensorValue: number) => void;
+interface ReferenceLine {
+    id: string;
+    value: number;
+    color: string;
+}
+
+interface TChartHandle {
+    addValue: (sensorValue: number | undefined) => void;
     clear: () => void;
     destroy: () => void;
+    setReferenceLine: (line: ReferenceLine) => void;
 }
 
 const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle>> =
@@ -61,7 +71,10 @@ const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle
                 datasets: [
                     {
                         label: props.label,
-                        data: dataValuesReference.current
+                        data: dataValuesReference.current,
+                        borderColor: props.lineColor ?? "#cac7c7",
+                        backgroundColor: "transparent",
+                        pointRadius: 2
                     }
                 ]
             };
@@ -91,13 +104,13 @@ const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle
                 chartInstanceReference.current?.destroy();
                 chartInstanceReference.current = null;
             };
-        }, [props.label]);
+        }, [props.label, props.lineColor]);
 
-        const addValue: (sensorValue: number) => void = (sensorValue: number): void => {
+        const addValue: (sensorValue: number | undefined) => void = (sensorValue: number | undefined): void => {
             const timestamp: string = new Date().toLocaleTimeString();
 
             labelsReference.current.push(timestamp);
-            dataValuesReference.current.push(sensorValue);
+            dataValuesReference.current.push(sensorValue ?? 0);
 
             if (labelsReference.current.length > 10) {
                 labelsReference.current.shift();
@@ -118,10 +131,37 @@ const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle
             chartInstanceReference.current = null;
         };
 
+        const setReferenceLine: (line: ReferenceLine) => void = (line: ReferenceLine): void => {
+            if (!chartInstanceReference.current) {
+                return;
+            }
+
+            const chart: Chart<"line", (number | Point | null)[]> = chartInstanceReference.current;
+            const index: number = chart.data.datasets.findIndex(
+                (dataset: ChartDataset<"line", (number | Point | null)[]>): boolean => dataset.label === line.id
+            );
+
+            const lineData: (number | Point | null)[] = Array(labelsReference.current.length).fill(line.value);
+            if (index === -1) {
+                chart.data.datasets.push({
+                    label: line.id,
+                    data: lineData,
+                    borderColor: line.color,
+                    borderDash: [6, 4],
+                    pointRadius: 0
+                });
+            } else {
+                chart.data.datasets[index].data = lineData;
+                chart.data.datasets[index].borderColor = line.color;
+            }
+            chart.update();
+        };
+
         useImperativeHandle(ref, (): TChartHandle => ({
             addValue,
             clear,
-            destroy
+            destroy,
+            setReferenceLine
         }));
 
         return (
@@ -133,4 +173,9 @@ const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle
 );
 
 TChart.displayName = "TChart";
+
+export type {
+    TChartHandle
+}
+
 export default TChart;
