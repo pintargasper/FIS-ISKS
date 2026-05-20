@@ -1,33 +1,12 @@
 "use client";
 
-import React, {
-    ForwardedRef, forwardRef, ForwardRefExoticComponent,
-    JSX, RefAttributes, RefObject,
-    useEffect,
-    useImperativeHandle,
-    useRef
-} from "react";
+import React, {ForwardedRef, forwardRef, ForwardRefExoticComponent, JSX,
+    RefAttributes, RefObject, useEffect, useImperativeHandle, useRef} from "react";
 
-import {
-    Chart,
-    LineController,
-    LineElement,
-    PointElement,
-    LinearScale,
-    CategoryScale,
-    ChartData,
-    ChartOptions,
-    Point,
-    ChartDataset
-} from "chart.js";
+import {Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale,
+    ChartData, ChartOptions, Point, ChartDataset} from "chart.js";
 
-Chart.register(
-    LineController,
-    LineElement,
-    PointElement,
-    LinearScale,
-    CategoryScale
-);
+Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale);
 
 interface TChartProps {
     label: string;

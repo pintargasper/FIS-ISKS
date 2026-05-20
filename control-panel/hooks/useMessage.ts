@@ -33,12 +33,10 @@ const useMessage: (sensorName: string) => UseSensorMessageReturn = (sensorName: 
                     return null;
                 }
                 return parsedMessage;
-
             } catch {
                 console.error("Invalid websocket message");
                 return null;
             }
-
         },
         [lastMessage, sensorName]
     );

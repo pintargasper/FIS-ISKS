@@ -1,16 +1,6 @@
 "use client";
 
-import {
-    Dispatch,
-    JSX,
-    ReactNode, RefObject,
-    SetStateAction,
-    useCallback,
-    useEffect,
-    useRef,
-    useState
-} from "react";
-
+import {Dispatch, JSX, ReactNode, RefObject, SetStateAction, useCallback, useEffect, useRef, useState} from "react";
 import {WebSocketContext, WebSocketContextValue} from "@/server/context/WsContext";
 
 const WsProvider: ({children}: { children: ReactNode; }) => JSX.Element = ({children}: {
@@ -53,8 +43,7 @@ const WsProvider: ({children}: { children: ReactNode; }) => JSX.Element = ({chil
             if (socketReference.current?.readyState === WebSocket.OPEN) {
                 socketReference.current.send(message);
             }
-        },
-        []
+        }, []
     );
 
     const value: WebSocketContextValue = {
