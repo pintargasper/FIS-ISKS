@@ -11,6 +11,7 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryS
 interface TChartProps {
     label: string;
     lineColor?: string;
+    maxValue?: number;
 }
 
 interface ReferenceLine {
@@ -31,7 +32,6 @@ const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle
 
         const canvasReference: RefObject<HTMLCanvasElement | null> = useRef<HTMLCanvasElement | null>(null);
         const chartInstanceReference: RefObject<Chart<"line"> | null> = useRef<Chart<"line"> | null>(null);
-
         const labelsReference: RefObject<string[]> = useRef<string[]>([]);
         const dataValuesReference: RefObject<number[]> = useRef<number[]>([]);
 
@@ -67,7 +67,7 @@ const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle
                     y: {
                         beginAtZero: true,
                         min: 0,
-                        max: 4095,
+                        max: props.maxValue ?? 4095,
                         grid: { display: false }
                     }
                 }
@@ -83,7 +83,7 @@ const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle
                 chartInstanceReference.current?.destroy();
                 chartInstanceReference.current = null;
             };
-        }, [props.label, props.lineColor]);
+        }, [props.label, props.lineColor, props.maxValue]);
 
         const addValue: (sensorValue: number | undefined) => void = (sensorValue: number | undefined): void => {
             const timestamp: string = new Date().toLocaleTimeString();
@@ -95,7 +95,6 @@ const TChart: ForwardRefExoticComponent<TChartProps & RefAttributes<TChartHandle
                 labelsReference.current.shift();
                 dataValuesReference.current.shift();
             }
-
             chartInstanceReference.current?.update();
         };
 

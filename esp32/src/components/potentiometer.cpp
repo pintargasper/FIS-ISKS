@@ -13,7 +13,7 @@ void Potentiometer::loop(WebSocketsClient& webSocket) {
 
     int value = analogRead(potentiometerPin);
 
-    String json = Builder::createMessage("potentiometer", value, true, "", "ESP32");
+    String json = Builder::createMessage("potentiometer", {value}, true, "", "ESP32");
     webSocket.sendTXT(json);
 }
 

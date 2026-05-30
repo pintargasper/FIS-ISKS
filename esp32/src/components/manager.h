@@ -29,6 +29,24 @@ class Photoresistor {
         String evaluateControlState(bool lowLight);
 };
 
+class TouchSensors {
+
+    public:
+        void setup();
+        void loop(WebSocketsClient& webSocket);
+        void handleServerCommand(const JsonDocument &jsonDocument);
+    private:
+        int touchSensorPin1 = 13;
+        int touchSensorPin2 = 12;
+        int touchSensorPin3 = 14;
+        int pushButtonPin = 33;
+        int blueLedPin = 27;
+        int greenLedPin = 26;
+        int redLedPin = 25;
+
+        void setLedState(bool blue, bool green, bool red);
+};
+
 class Potentiometer {
 
     public:

@@ -5,7 +5,7 @@ import { useWebSocket } from "@/server/context/WsContext";
 
 interface ServerMessage {
     name: string;
-    value?: number;
+    values?: number[];
     status?: boolean;
     error?: string;
     timestamp?: number;

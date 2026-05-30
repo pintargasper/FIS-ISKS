@@ -9,7 +9,11 @@ export const metadata: Metadata = {
     title: "ISKS Control Panel",
     description: "Real time sensor monitoring system",
     authors: [{ name: "Gašper Pintar" }],
-    creator: "Gašper Pintar"
+    creator: "Gašper Pintar",
+    icons: {
+        icon: "/logo/favicon.ico",
+        shortcut: "/logo/favicon.ico"
+    }
 };
 
 const RootLayout: ({children}: Readonly<{ children: ReactNode }>) => JSX.Element = ({children}: Readonly<{

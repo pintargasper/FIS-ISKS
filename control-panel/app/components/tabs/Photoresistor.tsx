@@ -15,8 +15,8 @@ const Photoresistor: () => JSX.Element = (): JSX.Element => {
     const isLedEnabled: boolean = data?.status ?? false;
 
     useEffect((): void => {
-        chartReference.current?.addValue(data?.value);
-    }, [data?.timestamp, data?.value]);
+        chartReference.current?.addValue(data?.values?.[0]);
+    }, [data?.timestamp, data?.values]);
 
     const handleButtonClick: () => void = (): void => {
 

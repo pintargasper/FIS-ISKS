@@ -21,7 +21,7 @@ void Photoresistor::loop(WebSocketsClient& webSocket) {
     String controlState = evaluateControlState(lowLight);
     blinkEspLed(espLedPin, backupLedState, espLedState, lastBlinkTime, 500);
 
-    String json = Builder::createMessage("photoresistor", value, mainLedState, controlState, "ESP32");
+    String json = Builder::createMessage("photoresistor", {value}, mainLedState, controlState, "ESP32");
     webSocket.sendTXT(json);
 }
 

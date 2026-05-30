@@ -45,11 +45,11 @@ const Potentiometer: () => JSX.Element = (): JSX.Element => {
 
     const chartReference: RefObject<TChartHandle | null> = useRef<TChartHandle | null>(null);
     const { data, sendMessage } = useMessage("potentiometer");
-    const status: Status = getStatus(data?.value ?? 0);
+    const status: Status = getStatus(data?.values?.[0] ?? 0);
     const lastSentStatus: RefObject<string | null> = useRef<string | null>(null);
 
     useEffect((): void => {
-        chartReference.current?.addValue(data?.value ?? 0);
+        chartReference.current?.addValue(data?.values?.[0] ?? 0);
         chartReference.current?.setReferenceLine({id: "target", value: 2048, color: "red"});
 
         if (lastSentStatus.current === status.id) {
@@ -63,7 +63,7 @@ const Potentiometer: () => JSX.Element = (): JSX.Element => {
                 value: status.id,
             })
         );
-    }, [data?.timestamp, data?.value, sendMessage, status]);
+    }, [data?.timestamp, data?.values, sendMessage, status]);
 
     return (
         <section className={"tab-content-section"}>

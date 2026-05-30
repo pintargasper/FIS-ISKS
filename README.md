@@ -32,10 +32,15 @@
 ## Task 2: Touch Sensors
 
 **Pins used**
-- Touch Sensor 1: 
-- Touch Sensor 2: 
-- Touch Sensor 3: 
+- Touch Sensor 1: GPIO 13
+- Touch Sensor 2: GPIO 12
+- Touch Sensor 3: GPIO 14
+- Push Button: GPIO 33
 - Each touch sensor controls a corresponding LED
+
+<div align="center">
+  <img src="assets/task2.png" width="600px" alt="Touch Sensors Example">
+</div>
 
 ## Task 3: Potentiometer
 

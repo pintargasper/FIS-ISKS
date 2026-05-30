@@ -6,6 +6,7 @@
 WifiManager wifiManager;
 WebSocketManager webSocketManager;
 Photoresistor photoresistor;
+TouchSensors touchSensors;
 Potentiometer potentiometer;
 
 void handleServerCommand(const JsonDocument &jsonDocument);
@@ -17,6 +18,7 @@ void setup() {
     webSocketManager.setCommandCallback(handleServerCommand);
 
     //photoresistor.setup();
+    //touchSensors.setup();
     //potentiometer.setup();
 }
 
@@ -24,6 +26,7 @@ void loop() {
     webSocketManager.loop();
 
     //photoresistor.loop(webSocketManager.webSocket);
+    //touchSensors.loop(webSocketManager.webSocket);
     //potentiometer.loop(webSocketManager.webSocket);
     delay(100);
 }
@@ -31,5 +34,6 @@ void loop() {
 
 void handleServerCommand(const JsonDocument &jsonDocument) {
     //photoresistor.handleServerCommand(jsonDocument);
+    //touchSensors.handleServerCommand(jsonDocument);
     //potentiometer.handleServerCommand(jsonDocument);
 }
