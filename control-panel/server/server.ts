@@ -1,7 +1,6 @@
-import https from "https";
-import fs from "fs";
 import path from "path";
 import next from "next";
+import http from "http";
 import { IncomingMessage, ServerResponse } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { fileURLToPath } from "url";
@@ -52,11 +51,6 @@ process.on("uncaughtException", (err: unknown): void => {
 const app: ReturnType<typeof next> = next({ dev, dir: path.join(__dirname, "..") });
 const handle: RequestHandler = app.getRequestHandler();
 
-const httpsOptions: https.ServerOptions = {
-    key: fs.readFileSync(path.join(__dirname, "..", "certs", "key.pem")),
-    cert: fs.readFileSync(path.join(__dirname, "..", "certs", "cert.pem")),
-};
-
 const port: number = Number(process.env.PORT ?? 3004);
 
 const isIgnorableWebSocketError: (error: UnknownErrorRecord) => boolean = (error: UnknownErrorRecord): boolean => {
@@ -76,10 +70,9 @@ const extractRemoteAddress: (request: IncomingMessage) => string = (request: Inc
 };
 
 app.prepare().then((): void => {
-    const server: Server = https.createServer(httpsOptions, (req: IncomingMessage, res: ServerResponse): Promise<void> => {
-            return handle(req as never, res as never);
-        }
-    );
+    const server: Server = http.createServer((req: IncomingMessage, res: ServerResponse): Promise<void> => {
+        return handle(req as never, res as never);
+    });
 
     const webSocketServer = new WebSocketServer({ noServer: true });
 
@@ -176,7 +169,11 @@ app.prepare().then((): void => {
 
     server.listen(port, (): void => {
         const address = server.address() as AddressInfo;
-        console.log(`[HTTPS + Next] Server running on https://localhost:${address.port}`);
+
+        const appProtocol: string = process.env.NEXT_PUBLIC_APP_PROTOCOL ?? "http";
+        const appHost: string = process.env.NEX_PUBLIC_APP_HOST ?? "localhost";
+
+        console.log(`[${appProtocol.toUpperCase()} + Next] Server running on ${appProtocol}://${appHost}:${address.port}`);
     });
 }).catch((error: unknown): void => {
     console.error(error);
