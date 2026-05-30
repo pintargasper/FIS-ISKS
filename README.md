@@ -36,6 +36,9 @@
 - Touch Sensor 2: GPIO 12
 - Touch Sensor 3: GPIO 14
 - Push Button: GPIO 33
+- Blue LED: GPIO 27
+- Green LED: GPIO 26
+- Red LED: GPIO 25
 
 <div align="center">
   <img src="assets/task2.png" width="600px" alt="Touch Sensors Example">

@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
 };
 
 module.exports = {
-    allowedDevOrigins: ['192.168.1.242']
+    allowedDevOrigins: ['school.gasperpintar.com']
 };
 
 export default nextConfig;
