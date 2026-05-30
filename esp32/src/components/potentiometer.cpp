@@ -10,7 +10,6 @@ void Potentiometer::setup() {
 }
 
 void Potentiometer::loop(WebSocketsClient& webSocket) {
-
     int value = analogRead(potentiometerPin);
 
     String json = Builder::createMessage("potentiometer", {value}, true, "", "ESP32");
@@ -18,7 +17,6 @@ void Potentiometer::loop(WebSocketsClient& webSocket) {
 }
 
 void Potentiometer::handleServerCommand(const JsonDocument &jsonDocument) {
-
     const char* command = jsonDocument["name"];
     const char* value = jsonDocument["value"];
 

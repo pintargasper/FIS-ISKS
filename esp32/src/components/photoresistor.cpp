@@ -10,7 +10,6 @@ void Photoresistor::setup() {
 }
 
 void Photoresistor::loop(WebSocketsClient& webSocket) {
-
     int value = analogRead(photoresistorPin);
 
     digitalWrite(mainLedPin, mainLedState ? HIGH : LOW);
@@ -26,7 +25,6 @@ void Photoresistor::loop(WebSocketsClient& webSocket) {
 }
 
 void Photoresistor::handleServerCommand(const JsonDocument &jsonDocument) {
-
     const char* command = jsonDocument["name"];
     bool value = jsonDocument["value"];
 
@@ -44,7 +42,6 @@ void Photoresistor::handleServerCommand(const JsonDocument &jsonDocument) {
 }
 
 void Photoresistor::blinkEspLed(int pin, bool &mainState, bool &state, unsigned long &lastBlinkTime, unsigned long interval) {
-
     if (!mainState) {
         state = false;
         return;
@@ -58,7 +55,6 @@ void Photoresistor::blinkEspLed(int pin, bool &mainState, bool &state, unsigned 
 }
 
 String Photoresistor::evaluateControlState(bool lowLight) {
-
     if (!mainLedState) {
         backupLedState = false;
         espLedState = false;

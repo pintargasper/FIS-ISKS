@@ -36,7 +36,6 @@
 - Touch Sensor 2: GPIO 12
 - Touch Sensor 3: GPIO 14
 - Push Button: GPIO 33
-- Each touch sensor controls a corresponding LED
 
 <div align="center">
   <img src="assets/task2.png" width="600px" alt="Touch Sensors Example">
@@ -57,8 +56,8 @@
 ## System Architecture
 
 The system consists of
-- **ESP32**: Reads sensors and controls actuators, communicates with the dashboard via WebSocket (SSL)
-- **Web Control Panel (Next.js)**: Visualizes sensor data and allows control of actuators in real time
+- **ESP32**
+- **Web Control Panel (Next.js)**
 
 ## Communication
 
@@ -85,18 +84,3 @@ Messages are exchanged in JSON format over WebSocket
   "value": "ok"
 }
 ```
-
-## Examples
-
-### Photoresistor
-- Shows a chart of light intensity
-- Allows toggling the main LED
-- Set threshold for low light detection
-
-### Touch Sensors
-- Add/remove charts for each touch pin
-- Show LED status for each touch input
-
-### Potentiometer
-- Displays analog value and status (Too low, OK, Too high)
-- Status LEDs indicate the range
