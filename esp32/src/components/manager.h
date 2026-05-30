@@ -32,6 +32,7 @@ class TouchSensors {
         void setup();
         void loop(WebSocketsClient& webSocket);
         void handleServerCommand(const JsonDocument &jsonDocument);
+
     private:
         int touchSensorPin1 = 13;
         int touchSensorPin2 = 12;
@@ -50,6 +51,7 @@ class Potentiometer {
         void setup();
         void loop(WebSocketsClient& webSocket);
         void handleServerCommand(const JsonDocument &jsonDocument);
+        
     private:
         int potentiometerPin = 32;
         int blueLedPin = 27;
