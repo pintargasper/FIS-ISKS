@@ -1,7 +1,7 @@
 "use client";
 
-import React, {JSX, RefObject, useEffect, useRef} from "react";
-import TChart, {TChartHandle} from "@/app/components/TChart";
+import React, { JSX, RefObject, useEffect, useRef } from "react";
+import TChart, { TChartHandle } from "@/app/components/TChart";
 import useMessage from "@/hooks/useMessage";
 
 type StatusColor = typeof STATUS[keyof typeof STATUS]["color"];
@@ -21,18 +21,28 @@ const STATUS = {
     high: { id: "high", color: "red", text: "Too high" }
 } as const;
 
-const getToleranceRange:(target: number, tolerance: number) => ToleranceRange = (target: number, tolerance: number): ToleranceRange => {
-    const toleranceValue: number = target * tolerance;
-    return {
-        lower: target - toleranceValue,
-        upper: target + toleranceValue,
+const getToleranceRange: (target: number, tolerance: number) => ToleranceRange =
+    (target: number, tolerance: number): ToleranceRange => {
+
+        const toleranceValue: number = target * tolerance;
+
+        return {
+            lower: target - toleranceValue,
+            upper: target + toleranceValue,
+        };
     };
-};
 
 const { lower: LOWER_BOUND, upper: UPPER_BOUND }: ToleranceRange = getToleranceRange(TARGET_VALUE, TOLERANCE);
 
 const getStatus: (value: number) => Status = (value: number): Status => {
-    return value < LOWER_BOUND ? STATUS.low : value > UPPER_BOUND ? STATUS.high : STATUS.ok;
+    if (value < LOWER_BOUND) {
+        return STATUS.low;
+    }
+
+    if (value > UPPER_BOUND) {
+        return STATUS.high;
+    }
+    return STATUS.ok;
 };
 
 const COLOR_CLASS_MAP: Record<StatusColor, string> = {
@@ -44,26 +54,49 @@ const COLOR_CLASS_MAP: Record<StatusColor, string> = {
 const Potentiometer: () => JSX.Element = (): JSX.Element => {
 
     const chartReference: RefObject<TChartHandle | null> = useRef<TChartHandle | null>(null);
+
     const { data, sendMessage } = useMessage("potentiometer");
-    const status: Status = getStatus(data?.values?.[0] ?? 0);
+
     const lastSentStatus: RefObject<string | null> = useRef<string | null>(null);
+    const lastValue: RefObject<number | null> = useRef<number | null>(null);
+
+    const currentValue: number = data?.values?.[0] ?? 0;
+    const status: Status = getStatus(currentValue);
 
     useEffect((): void => {
-        chartReference.current?.addValue(data?.values?.[0] ?? 0);
-        chartReference.current?.setReferenceLine({id: "target", value: 2048, color: "red"});
-
-        if (lastSentStatus.current === status.id) {
+        if (!data?.values || !chartReference.current) {
             return;
         }
 
-        lastSentStatus.current = status.id;
-        sendMessage(
-            JSON.stringify({
+        const value: number = data.values[0];
+        if (lastValue.current === value && value != 0 && value != 4095) {
+            return;
+        }
+
+        lastValue.current = value;
+        chartReference.current.addValue(value);
+        chartReference.current?.setReferenceLine({id: "target", value: TARGET_VALUE, color: "red"});
+    }, [data?.timestamp, data?.values]);
+
+    useEffect((): (() => void) | undefined => {
+        const nextStatus: string = status.id;
+
+        if (lastSentStatus.current === nextStatus) {
+            return;
+        }
+
+        const timeout: NodeJS.Timeout = setTimeout((): void => {
+            lastSentStatus.current = nextStatus;
+            sendMessage(JSON.stringify({
                 name: "status",
-                value: status.id,
-            })
-        );
-    }, [data?.timestamp, data?.values, sendMessage, status]);
+                value: nextStatus
+            }));
+        }, 120);
+
+        return (): void => {
+            clearTimeout(timeout);
+        };
+    }, [status.id, sendMessage]);
 
     return (
         <section className={"tab-content-section"}>
@@ -77,7 +110,11 @@ const Potentiometer: () => JSX.Element = (): JSX.Element => {
 
                 <div className={"card-body"}>
                     <div className={"chart-wrapper mb-3"}>
-                        <TChart ref={chartReference} label={"Potentiometer"} lineColor={"#9ae67e"} />
+                        <TChart
+                            ref={chartReference}
+                            label={"Potentiometer"}
+                            lineColor={"#9ae67e"}
+                        />
                         <div className={`rectangle ${status.color}`} />
                     </div>
 
@@ -88,7 +125,8 @@ const Potentiometer: () => JSX.Element = (): JSX.Element => {
                                 className={`status-badge p-1 bg-${COLOR_CLASS_MAP[statusItem.color]} ${
                                     status.color === statusItem.color ? "is-active" : ""
                                 }`}>
-                                {statusItem.color.charAt(0).toUpperCase() + statusItem.color.slice(1)}: {statusItem.text}
+                                {statusItem.color.charAt(0).toUpperCase() + statusItem.color.slice(1)}:{" "}
+                                {statusItem.text}
                             </span>
                         ))}
                     </div>
